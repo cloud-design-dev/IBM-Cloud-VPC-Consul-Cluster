@@ -1,0 +1,25 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+users:
+  - name: ryan
+    groups: [ sudo ]
+    sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
+    shell: /bin/bash
+    ssh-authorized-keys:
+    - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNNgeVYR+Zfl32Zhv/sJfpMXNlIuK0h+VGkGUBDZJqAqQ9cMxFzV9Xb7T2UgS0QEMre/5aiMUhPvFBDdUw+7ErlV9rZ8N2kruIBDt3eIBPGDuDuX+fQ3lkjKnJ19P/F4v9wwvcVnrOL+7XdZQMKSI+QTtnCLWhRwNu0mMX+0La+5q/azTRcydVVJPZH+f3o+Eu0MdJtsWEbp5XOVSYTODKeX5ozJYCX1vHqBBlNu11isY8pfEUB4BXV27dQPCeVLw9qE3xCA8o2KloI3rrylzlP3ZbCDIu3+cLPzggMKpvuom4mkSRQqZ1Q0oNKKBomf9d20CGmHso3yc9d2jVvOwVuirHMjgAxvVuoEWgUNrOSiBK8UkPTfNKsh7GGhjpZWFwI7ogaqEZLyKggErbF9eWGlzMYFZE8XuFquRUL7PvsveJxE3xODbRxAo+n9DPjaOhVANkkt52oL69CG0fTU+HI4Fb3FplvTLd1LWTjQ3wLyL0a40Vz4+R8chu5fVP9CXaM6lTEeHTy78lZp8YBhJw9/8rB+wBzRPX0koyDPs9x/1AgMf+2y9JAXewdUTWdWzJQo2HV6+lHDyL/3r9UteeqqmEvQimuz7BqR1ifhaptj+VOui29Ukf/HZAAwGP9Y7fNs64DkrKtCHyttzKj6+LXaEVLsBJbILkc/HANq8uHw== ryan@hyperion'
+    - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDSJPZUolWLYlIZ+J4yT6RdkBTiNLCd//tFJ6kcS+l6pereoEJZNDIOFVp+XPaU/LEVljh7yQVi2L2TwisF7u46Z+UZxKvPcto/g9SuacxftP/lp+OJTTKcwsFoj/rLcltHEiusiDecjWtCypIMvDvUHuJI6UAKH/WSi4VDDMiMzDsfuqgyzUZdeerwgpSf8Onfsp3DJo85eyDqif0NELyxzjW13/Adq1XwmKhJBS8Ygoj8HQpKJvQk/srohAQVZmH3hzMub5q+kMHkebGRKwPHzG4Kgze3SLpl0WYO0Uvg6LaxAMZF9WxIQrYHOHzvo0db8VR+UZZlaPytBsLQciQ7SdCqBG092ZKbKksAxzm73473GBBs0CnDx227+3QUpME1OpFNahLLOgHETUly1A6d0nOZYdP9Z3mKUlDkN314rMtcrV/QHg+NrSswFImOGnfuECo8wn8EFY4SK1wyGAQ2om+NXpXT19GXImMHZ/L6qstnw//n0WhJJmdxDDlvQBScXxgJc6JDVajlbH/KJz+iBsW+hNT1VkNODdTlrTqv1SeXZfqo9Sif3S1D9jQH/jJUZNEMMOAJj7FDEz+r+1Isqo6LII8I3bhakVgVvD7o1fGoOIph7hUkYYtXcncddRWSY+A4lnbNj6LuMIAebtqm/ARPsre/PkzuM9NfbUkpTQ== ryan@tycho2020'
+    - 'ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAomUAe48ZgTrsnIMqKHMxD4iVU3dNVOwh1IEAQgRzsW/tl2CiP0IQPV9pGi/lN7GPHTwS7IRx2pR4hGVdn1XMsvbldMWxCB4fV/ITEmSgEr4DedOBpaNDL/7eb0/6ZVsINOrix5QqSVXJOiwwPidZH6h3oVuXHM2J0zkHIhuDJSRs2X7XEzDW7VGVQEO7xb8Pz0wdIksVzjd/uN1DHQruO0r5ZvK+bDE2cHvLsg0y/pvdeltvJLv9/TN2a09jWMrwTzML12Iez6SHeCYoi1FTxxP/Hb7DrJ646sIaOS1+1L0IX7La86RSbSa2HV+yZCm1RPK20h6R3OIQ4XM4RQO08Q== rsa-key-20200513'
+packages:
+    - python
+    - python-apt
+    - python3-apt
+    - build-essential
+    - unzip
+    - jq
+    - git
+snap:
+    commands:
+      00: snap install yq
+final_message: "The system is finally up, after $UPTIME seconds"
+output: {all: '| tee -a /var/log/cloud-init-output.log'}
