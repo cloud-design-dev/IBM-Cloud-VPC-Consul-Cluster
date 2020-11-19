@@ -34,9 +34,7 @@ module ansible {
   bastion_ip      = ibm_is_floating_ip.bastion.address
   region          = var.region
   encrypt_key     = var.encrypt_key
+  acl_token       = var.acl_token
   private_key_pem = tls_private_key.ssh.private_key_pem
-  # instances = module.instance.instances
-  # subnets = ibm_is_instance.consul[*].primary_network_interface[0].primary_ipv4_address
-  # private_key_pem = tls_private_key.ssh.private_key_pem
 }
 

@@ -16,10 +16,6 @@ variable ibmcloud_timeout {
   default = 900
 }
 
-variable consul_version {
-
-}
-
 variable profile {
   default = "cx2-2x4"
 }
@@ -33,3 +29,5 @@ variable ssh_key {}
 variable encrypt_key {}
 
 variable "pdns_instance_name" {}
+
+variable "acl_token" {}

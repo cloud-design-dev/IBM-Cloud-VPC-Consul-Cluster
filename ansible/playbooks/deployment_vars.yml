@@ -1,3 +1,0 @@
-encrypt_key: uDp7a/LnTQA2aT9T3/HcgSAxmDwHF8jpH2K1Q/Hs+FQ=
-datacenter: jp-tok
-consul_servers: "{{ groups['instances'] }}"
