@@ -1,5 +1,5 @@
 resource "ibm_is_security_group_rule" "consul_server_http" {
-  group     = ibm_is_vpc.vpc.default_security_group
+  group     = module.vpc.default_security_group
   direction = "inbound"
   remote    = cidrsubnet(ibm_is_subnet.subnet[0].ipv4_cidr_block, -6, 0)
   tcp {
@@ -9,14 +9,14 @@ resource "ibm_is_security_group_rule" "consul_server_http" {
 }
 
 resource "ibm_is_security_group_rule" "out_all" {
-  group     = ibm_is_vpc.vpc.default_security_group
+  group     = module.vpc.default_security_group
   direction = "outbound"
   remote    = "0.0.0.0/0"
 }
 
 
 resource "ibm_is_security_group_rule" "consul_client_wan_tcp" {
-  group     = ibm_is_vpc.vpc.default_security_group
+  group     = module.vpc.default_security_group
   direction = "inbound"
   remote    = cidrsubnet(ibm_is_subnet.subnet[0].ipv4_cidr_block, -6, 0)
   tcp {
@@ -27,7 +27,7 @@ resource "ibm_is_security_group_rule" "consul_client_wan_tcp" {
 
 
 resource "ibm_is_security_group_rule" "ssh_in" {
-  group     = ibm_is_vpc.vpc.default_security_group
+  group     = module.vpc.default_security_group
   direction = "inbound"
   remote    = "0.0.0.0/0"
   tcp {
@@ -37,7 +37,7 @@ resource "ibm_is_security_group_rule" "ssh_in" {
 }
 
 resource "ibm_is_security_group_rule" "rdp_in" {
-  group     = ibm_is_vpc.vpc.default_security_group
+  group     = module.vpc.default_security_group
   direction = "inbound"
   remote    = "0.0.0.0/0"
   tcp {
@@ -47,7 +47,7 @@ resource "ibm_is_security_group_rule" "rdp_in" {
 }
 
 resource "ibm_is_security_group_rule" "vpc_wan_udp" {
-  group     = ibm_is_vpc.vpc.default_security_group
+  group     = module.vpc.default_security_group
   direction = "inbound"
   remote    = cidrsubnet(ibm_is_subnet.subnet[0].ipv4_cidr_block, -6, 0)
   udp {

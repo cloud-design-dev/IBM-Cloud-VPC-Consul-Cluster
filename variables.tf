@@ -28,6 +28,6 @@ variable ssh_key {}
 
 variable encrypt_key {}
 
-variable "pdns_instance_name" {}
+# variable "pdns_instance_name" {}
 
 variable "acl_token" {}
