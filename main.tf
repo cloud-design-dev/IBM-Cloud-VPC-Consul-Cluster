@@ -7,7 +7,7 @@ resource ibm_is_ssh_key generated_key {
   name           = "${local.name}-${var.region}-key"
   public_key     = tls_private_key.ssh.public_key_openssh
   resource_group = data.ibm_resource_group.project_group.id
-  tags           = concat(var.tags, [local.name, "terraform:workspace:${terraform.workspace}"])
+  tags           = concat(var.tags, ["region:${var.region}", "project:${var.project_name}", "terraform:workspace:${terraform.workspace}"])
 }
 
 locals {
@@ -19,11 +19,8 @@ module vpc {
   source         = "git::https://github.com/cloud-design-dev/ibm-vpc-module.git"
   name           = "${local.name}-vpc"
   resource_group = var.resource_group
-  tags           = concat(var.tags, [var.region, var.project_name, "terraform:workspace:${terraform.workspace}"])
+  tags           = concat(var.tags, ["region:${var.region}", "project:${var.project_name}", "terraform:workspace:${terraform.workspace}"])
 }
-
-
-
 
 module public_gateway {
   source         = "git::https://github.com/cloud-design-dev/ibm-vpc-public-gateway-module.git"
@@ -42,7 +39,7 @@ resource ibm_is_network_acl consul_network_acl {
     name        = "egress"
     action      = "allow"
     source      = "0.0.0.0/0"
-    destination = module.edge_subnet.ipv4_cidr_block
+    destination = "0.0.0.0/0"
     direction   = "outbound"
   }
   rules {
@@ -56,7 +53,7 @@ resource ibm_is_network_acl consul_network_acl {
 
 module edge_subnet {
   source         = "git::https://github.com/cloud-design-dev/ibm-vpc-subnet-count-module.git"
-  name           = local.name
+  name           = "${local.name}-edge"
   address_count  = "8"
   resource_group = var.resource_group
   zone           = data.ibm_is_zones.mzr.zones[0]
@@ -67,14 +64,13 @@ module edge_subnet {
 
 module consul_subnet {
   source         = "git::https://github.com/cloud-design-dev/ibm-vpc-subnet-count-module.git"
-  name           = local.name
+  name           = "${local.name}-consul"
   zone           = data.ibm_is_zones.mzr.zones[0]
   vpc_id         = module.vpc.id
   network_acl    = ibm_is_network_acl.consul_network_acl.id
   address_count  = "128"
   resource_group = var.resource_group
   public_gateway = module.public_gateway.id
-  
 }
 
 
