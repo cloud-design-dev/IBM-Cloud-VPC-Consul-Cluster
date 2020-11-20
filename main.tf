@@ -11,8 +11,7 @@ resource ibm_is_ssh_key generated_key {
 }
 
 locals {
-  ssh_key_ids = var.ssh_key != "" ? [data.ibm_is_ssh_key.key.id, ibm_is_ssh_key.generated_key.id] : [ibm_is_ssh_key.generated_key.id]
-  name        = "${var.project_name}-${terraform.workspace}"
+  name = "${var.project_name}-${terraform.workspace}"
 }
 
 module vpc {
@@ -73,12 +72,25 @@ module consul_subnet {
   public_gateway = module.public_gateway.id
 }
 
+module bastion {
+  source            = "git::https://github.com/cloud-design-dev/ibm-vpc-instance-module.git"
+  name              = "${local.name}-bastion"
+  zone              = data.ibm_is_zones.mzr.zones[0]
+  ssh_key           = ibm_is_ssh_key.generated_key.id
+  vpc_id            = module.vpc.id
+  subnet_id         = module.edge_subnet.id
+  security_group_id = module.vpc.default_security_group
+  resource_group    = var.resource_group
+  image_name        = "ibm-ubuntu-20-04-minimal-amd64-2"
+  tags              = concat(var.tags, ["bastion"])
+}
 
-# resource "ibm_is_floating_ip" "bastion" {
-#   name           = "${local.name}-bastion-floating-ip"
-#   target         = ibm_is_instance.bastion.primary_network_interface[0].id
-#   resource_group = data.ibm_resource_group.project_group.id
-# }
+
+resource "ibm_is_floating_ip" "bastion" {
+  name           = "${local.name}-bastion-public-ip"
+  target         = module.bastion.primary_network_interface
+  resource_group = data.ibm_resource_group.project_group.id
+}
 
 # module ansible {
 #   source          = "./ansible"
