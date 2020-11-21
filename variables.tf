@@ -24,9 +24,9 @@ variable image {
   default = "ibm-ubuntu-20-04-minimal-amd64-2"
 }
 
-#variable ssh_key {}
+variable ssh_key {}
 
-#variable encrypt_key {}
+variable encrypt_key {}
 
 # variable "pdns_instance_name" {}
 

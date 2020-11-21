@@ -13,7 +13,6 @@ resource "local_file" "ansible_inventory_vars" {
     {
       encrypt_key = var.encrypt_key
       region      = var.region
-      acl_token   = var.acl_token
     }
   )
   filename = "${path.module}/playbooks/deployment_vars.yml"
