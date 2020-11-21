@@ -1,13 +1,17 @@
+data ibm_is_image image {
+  name = var.image_name
+}
+
 resource "ibm_is_instance" "instance" {
-  name           = "${var.name}-${var.zone}-instance"
+  name           = var.name
   vpc            = var.vpc_id
   zone           = var.zone
   profile        = var.profile_name
   image          = data.ibm_is_image.image.id
-  keys           = [data.ibm_is_ssh_key.key.id]
-  resource_group = data.ibm_resource_group.group.id
+  keys           = [var.ssh_key]
+  resource_group = var.resource_group
 
-  user_data = var.user_data
+  user_data = templatefile("${path.module}/init.yml", { generated_key = var.public_key, password_hash = var.password_hash })
 
   primary_network_interface {
     subnet          = var.subnet_id
@@ -15,8 +19,8 @@ resource "ibm_is_instance" "instance" {
   }
 
   boot_volume {
-    name = "${var.name}-${var.zone}-boot"
+    name = "${var.name}-boot"
   }
 
-  tags = concat(var.tags, ["instance"])
+  tags = concat(var.tags, [var.zone, "instance"])
 }

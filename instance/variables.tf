@@ -13,4 +13,7 @@ variable profile_name {
 variable tags {}
 variable security_group_id {}
 variable zone {}
-variable user_data {}
+
+variable password_hash {}
+
+variable public_key {}
