@@ -72,3 +72,9 @@ resource "ibm_is_security_group_rule" "consul_tcp_dns_in" {
     port_max = 8600
   }
 }
+
+resource "ibm_is_security_group_rule" "allow_outbound" {
+  group     = ibm_is_security_group.consul_security_group.id
+  direction = "outbound"
+  remote    = "0.0.0.0/0"
+}

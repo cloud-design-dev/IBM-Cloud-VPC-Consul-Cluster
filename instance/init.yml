@@ -7,7 +7,6 @@ users:
     sudo: [ "ALL=(ALL) ALL" ]
     shell: /bin/bash
     ssh_import_id: greyhoundforty
-    passwd: ${password_hash}
     ssh-authorized-keys:
     - '${generated_key}'
 packages:
@@ -18,8 +17,30 @@ packages:
     - unzip
     - jq
     - git
+write_files:
+- content: |
+    network:
+    version: 2
+    ethernets:
+      ens3:
+        nameservers:
+          addresses: [ "161.26.0.7", "161.26.0.8" ]
+        dhcp4-overrides:
+          use-dns: false
+  path: /etc/netplan/99-custom-dns.yaml
+  owner: root:root
+- content: | 
+    supersede domain-name-servers 161.26.0.7, 161.26.0.8;
+  path: /etc/dhcp/dhclient.conf
+  owner: root:root
 snap:
-    commands:
-      00: snap install yq
+  commands:
+    00: snap install yq
+power_state:
+  delay: "+30"
+  mode: poweroff
+  message: Bye Bye
+  timeout: 30
+  condition: True
 final_message: "The system is finally up, after $UPTIME seconds"
 output: {all: '| tee -a /var/log/cloud-init-output.log'}

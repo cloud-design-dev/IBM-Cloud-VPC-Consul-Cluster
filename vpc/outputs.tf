@@ -17,3 +17,7 @@ output consul_subnet_id {
 output vpc {
   value = ibm_is_vpc.vpc
 }
+
+# output default_security_group {
+#   value = 
+# }

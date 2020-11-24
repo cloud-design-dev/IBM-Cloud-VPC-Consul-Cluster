@@ -11,7 +11,7 @@ resource "ibm_is_instance" "instance" {
   keys           = [var.ssh_key]
   resource_group = var.resource_group
 
-  user_data = templatefile("${path.module}/init.yml", { generated_key = var.public_key, password_hash = var.password_hash })
+  user_data = templatefile("${path.module}/init.yml", { generated_key = var.public_key })
 
   primary_network_interface {
     subnet          = var.subnet_id

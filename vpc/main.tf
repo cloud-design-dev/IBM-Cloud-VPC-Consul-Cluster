@@ -15,7 +15,7 @@ resource ibm_is_subnet bastion_subnet {
   name                     = "${var.name}-${var.zone}-bastion-subnet"
   vpc                      = ibm_is_vpc.vpc.id
   zone                     = var.zone
-  total_ipv4_address_count = var.address_count["bastion"]
+  total_ipv4_address_count = var.address_count
   public_gateway           = ibm_is_public_gateway.gateway.id
   resource_group           = var.resource_group
 }
@@ -24,7 +24,7 @@ resource ibm_is_subnet consul_subnet {
   name                     = "${var.name}-${var.zone}-consul-subnet"
   vpc                      = ibm_is_vpc.vpc.id
   zone                     = var.zone
-  total_ipv4_address_count = var.address_count[consul]
+  total_ipv4_address_count = var.address_count
   public_gateway           = ibm_is_public_gateway.gateway.id
   resource_group           = var.resource_group
 }

@@ -14,6 +14,4 @@ variable tags {}
 variable security_group_id {}
 variable zone {}
 
-variable password_hash {}
-
 variable public_key {}

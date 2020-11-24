@@ -18,6 +18,15 @@
       - name: Add consul repo 
         apt_repository:
           repo: deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main
+      - name: Install consul 
+        apt:
+          name: consul
+          state: present
+          update_cache: yes
+      - name: Set consul client environment variable 
+        blockinfile:
+          path: /root/.bashrc
+          block: export CONSUL_HTTP_ADDR="http://{{ ansible_ens3.ipv4.address }}:8500"
       - name: Copy server config to /etc/consul.d/server.hcl
         copy:
           src: ../templates/server.j2
@@ -27,7 +36,7 @@
           mode: '0640'
       - name: Template consul client file 
         template:
-          src: ../templates/client.j2
+          src: ../templates/consul-client.j2
           dest: /etc/consul.d/consul.hcl
           owner: consul
           group: consul

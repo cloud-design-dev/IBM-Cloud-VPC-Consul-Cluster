@@ -1,5 +1,9 @@
 locals {
-  name = "${terraform.workspace}-${formatdate("DD-MMM-YY-hh-mm", timestamp())}"
+  name = "${terraform.workspace}-${formatdate("DDhhmm", timestamp())}"
+}
+
+resource "random_id" "name" {
+  byte_length = 4
 }
 
 resource "random_string" "random" {
@@ -14,7 +18,7 @@ resource tls_private_key ssh {
 }
 
 resource ibm_is_ssh_key generated_key {
-  name           = "sshkey-${local.name}-${var.region}"
+  name           = "${local.name}-${var.region}-sshkey"
   public_key     = tls_private_key.ssh.public_key_openssh
   resource_group = data.ibm_resource_group.project_group.id
   tags           = concat(var.tags, ["region:${var.region}", "project:${local.name}", "terraform:workspace:${terraform.workspace}"])
@@ -36,20 +40,25 @@ module bastion {
   ssh_key           = ibm_is_ssh_key.generated_key.id
   vpc_id            = module.vpc.vpc.id
   subnet_id         = module.vpc.bastion_subnet_id
-  security_group_id = module.vpc.default_security_group
+  security_group_id = module.vpc.vpc.default_security_group
   resource_group    = data.ibm_resource_group.project_group.id
   tags              = concat(var.tags, ["region:${var.region}", "project:${local.name}", "bastion", "terraform:workspace:${terraform.workspace}"])
-  password_hash     = sha512(random_string.random.result)
   public_key        = tls_private_key.ssh.public_key_openssh
+}
+
+resource ibm_is_floating_ip bastion {
+  name           = "${local.name}-bastion-fip"
+  target         = module.bastion.primary_network_interface_id
+  resource_group = data.ibm_resource_group.project_group.id
 }
 
 module consul_security {
   source             = "./security"
   name               = local.name
-  vpc_id            = module.vpc.vpc.id
-  vpc_security_group = module.vpc.default_security_group
+  vpc_id             = module.vpc.vpc.id
+  vpc_security_group = module.vpc.vpc.default_security_group
   consul_cidr        = module.vpc.consul_subnet_cidr
-  resource_group    = data.ibm_resource_group.project_group.id
+  resource_group     = data.ibm_resource_group.project_group.id
 }
 
 module consul {
@@ -60,21 +69,20 @@ module consul {
   ssh_key           = ibm_is_ssh_key.generated_key.id
   vpc_id            = module.vpc.vpc.id
   subnet_id         = module.vpc.consul_subnet_id
-  security_group_id = module.security.consul_security_group
+  security_group_id = module.consul_security.consul_security_group
   resource_group    = data.ibm_resource_group.project_group.id
   tags              = concat(var.tags, ["region:${var.region}", "project:${local.name}", "consul", "terraform:workspace:${terraform.workspace}"])
-  password_hash     = sha512(random_string.random.result)
   public_key        = tls_private_key.ssh.public_key_openssh
 }
 
-# module ansible {
-#   source          = "./ansible"
-#   instances       = module.consul[*].instance
-#   bastion_ip      = ibm_is_floating_ip.bastion.address
-#   region          = var.region
-#   encrypt_key     = var.encrypt_key
-#   private_key_pem = tls_private_key.ssh.private_key_pem
-# }
+module ansible {
+  source          = "./ansible"
+  instances       = module.consul[*].instance
+  bastion_ip      = ibm_is_floating_ip.bastion.address
+  region          = var.region
+  encrypt_key     = var.encrypt_key
+  private_key_pem = tls_private_key.ssh.private_key_pem
+}
 
 resource "local_file" "ssh-key" {
   content         = tls_private_key.ssh.private_key_pem
