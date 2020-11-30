@@ -53,3 +53,5 @@
           name: consul.service
           enabled: yes
           state: started
+      - name: Reboot machine
+        reboot:

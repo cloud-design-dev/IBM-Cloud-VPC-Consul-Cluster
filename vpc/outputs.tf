@@ -11,7 +11,7 @@ output bastion_subnet_id {
 }
 
 output consul_subnet_id {
-  value = ibm_is_subnet.bastion_subnet.id
+  value = ibm_is_subnet.consul_subnet.id
 }
 
 output vpc {
