@@ -26,3 +26,6 @@
    terraform init
    terraform apply
    ```
+
+
+![Deployment Diagram](https://dsc.cloud/quickshare/consul-cluster.png)

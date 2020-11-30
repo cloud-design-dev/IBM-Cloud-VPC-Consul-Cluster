@@ -52,7 +52,7 @@ resource ibm_is_floating_ip bastion {
   resource_group = data.ibm_resource_group.project_group.id
 }
 
-module consul_security {
+module security {
   source             = "./security"
   name               = local.name
   vpc_id             = module.vpc.vpc.id
@@ -69,7 +69,7 @@ module consul {
   ssh_key           = ibm_is_ssh_key.generated_key.id
   vpc_id            = module.vpc.vpc.id
   subnet_id         = module.vpc.consul_subnet_id
-  security_group_id = module.consul_security.consul_security_group
+  security_group_id = module.security.consul_security_group
   resource_group    = data.ibm_resource_group.project_group.id
   tags              = concat(var.tags, ["region:${var.region}", "project:${local.name}", "consul", "terraform:workspace:${terraform.workspace}"])
   public_key        = tls_private_key.ssh.public_key_openssh
