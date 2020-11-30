@@ -4,7 +4,7 @@ project_name = ""
 region = ""
 # Resource group name for deployed resources
 resource_group     = ""
+# IBM Cloud API key for deploying resources
 ibmcloud_api_key   = ""
-ssh_key            = ""
-pdns_instance_name = ""
+# Encryption key for consul gossip
 encrypt_key        = ""

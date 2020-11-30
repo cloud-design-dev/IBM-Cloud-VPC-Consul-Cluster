@@ -6,7 +6,6 @@
  - An [IBM Cloud API Key]()
 
 ## Deploy all resources
-
 1. Clone repository:
     ```sh
     git clone https://github.com/cloud-design-dev/ibm-vpc-consul-terraform-ansible.git
@@ -24,8 +23,17 @@
 1. Deploy all resources:
    ```sh
    terraform init
-   terraform apply
+   terraform plan -out default.tfplan 
+   terraform apply default.tfplan
    ```
 
+After the plan completes we will move on to deploying Consul using Ansible. 
 
+## Run Ansible playbook to create the consul cluster
+```sh
+cd ansible 
+ansible-playbook -i inventory playbooks/consul-cluster.yml
+```
+
+## Diagram
 ![Deployment Diagram](https://dsc.cloud/quickshare/consul-cluster.png)
