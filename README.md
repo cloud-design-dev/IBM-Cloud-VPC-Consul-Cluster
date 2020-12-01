@@ -56,6 +56,5 @@ dev-011534-us-east-1-consul3  10.241.0.37:8301  alive   server  1.9.0  2        
 ### Asciinema recording 
 [![asciicast](https://asciinema.org/a/376553.svg)](https://asciinema.org/a/376553)
 
-
 ## Diagram
 ![Deployment Diagram](consul-cluster-diagram.png)
