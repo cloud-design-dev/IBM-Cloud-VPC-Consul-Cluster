@@ -6,12 +6,6 @@ resource "random_id" "name" {
   byte_length = 4
 }
 
-resource "random_string" "random" {
-  length    = 24
-  special   = false
-  min_upper = 8
-}
-
 resource tls_private_key ssh {
   algorithm = "RSA"
   rsa_bits  = 4096

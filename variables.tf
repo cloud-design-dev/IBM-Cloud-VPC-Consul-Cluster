@@ -33,3 +33,5 @@ variable encrypt_key {}
 #variable "acl_token" {}
 
 variable remote_ip {}
+
+variable ibmcloud_api_key {}

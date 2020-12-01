@@ -14,10 +14,4 @@ output consul_names {
   value = module.consul[*].instance.name
 }
 
-# output consul_ips {
-#   value = ibm_is_instance.consul[*].primary_network_interface[0].primary_ipv4_address
-# }
 
-output password {
-  value = random_string.random.result
-}
