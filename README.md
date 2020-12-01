@@ -36,4 +36,4 @@ ansible-playbook -i inventory playbooks/consul-cluster.yml
 ```
 
 ## Diagram
-![Deployment Diagram](https://dsc.cloud/quickshare/consul-cluster-diagram.png)
+![Deployment Diagram](consul-cluster-diagram.png)
