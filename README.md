@@ -1,3 +1,5 @@
+[![terraform-validate](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/main.yml/badge.svg)](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/main.yml)
+
 # Deploy a Consul cluster to an IBM Cloud VPC using Terraform and Ansible
 
 ## Prerequisites for **all** deployment options
