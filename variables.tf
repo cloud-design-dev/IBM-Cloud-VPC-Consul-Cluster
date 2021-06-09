@@ -75,7 +75,7 @@ variable "create_public_ip" {
   default     = true
 }
 
-variables "commit" {
+variable "commit" {
   type = string
   default = ""
 }
