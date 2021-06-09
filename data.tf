@@ -17,8 +17,8 @@ data "ibm_is_vpc" "vpc" {
   name  = var.existing_vpc_name
 }
 
-data "ibm_is_subnet" "existing_subnet" {
+
+data "ibm_is_subnet" "subnet" {
   count = var.existing_subnet_name != "" ? 1 : 0
   name  = var.existing_subnet_name
 }
-

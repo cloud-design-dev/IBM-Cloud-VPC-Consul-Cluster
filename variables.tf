@@ -34,12 +34,13 @@ variable "name" {
 }
 
 variable "tags" {
-  default = ["owner:ryantiffany"]
+  default = []
 }
 
-variable "address_count" {
-  default = "256"
+variable "owner" {
+  default = "ryantiffany"
 }
+
 
 variable "allow_ssh_from" {
   default = ""
