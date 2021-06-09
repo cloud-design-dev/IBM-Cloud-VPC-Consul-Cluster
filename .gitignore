@@ -7,9 +7,12 @@
 ansible/playbooks/deployment_vars.yml
 .terraform.lock.hcl
 ansible/inventory
+ansible/ansible.cfg
+ansible/templates/server.hcl
+
 # Crash log files
 crash.log
-
+backend.tf
 # Ignore any .tfvars files that are generated automatically for each Terraform run. Most
 # .tfvars files are managed as part of configuration and so should be included in
 # version control.

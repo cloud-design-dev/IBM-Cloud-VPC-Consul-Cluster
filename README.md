@@ -1,9 +1,29 @@
 # Deploy a Consul cluster to an IBM Cloud VPC using Terraform and Ansible
 
-## Prerequisites
- - [tfswitch]() installed 
- - [ansible]() installed 
+## Prerequisites for **all** deployment options
+The following information will be needed for each of the deployment options.  
+
  - An [IBM Cloud API Key]()
+ - A Consul [Encrypt Key](https://www.consul.io/docs/agent/options#_encrypt). This is the secret key to use for encryption of Consul network traffic. See [Generate Consul Encrypt Key](#generate-consul-encrypt-key) for running the `keygen` command.
+
+### Prerequisites for Deployment Option 1: Local Terraform deployment
+
+ - [Terraform]() installed. This will deploy the required infrastructure.
+ - [Ansible]() installed. This will configure our Consul instances.  
+ - [Docker]() installed. We will use a Consul Docker image to generate our consul gossip key..
+
+### Prerequisites for Deployment Option 2: Local bxshell deployment 
+If you would like to use an IBM Cloud friendly Docker image in order to not interfere with locally installed versions of the required tools, I recommend using [bxshell](https://github.com/l2fprod/bxshell)
+
+ - [Docker]() installed. We will use a Consul Docker image to generate our consul gossip key.
+ - [bxshell](https://github.com/l2fprod/bxshell#install) installed. 
+
+### Generate Consul Encrypt Key
+If you have [Docker]() installed
+
+```sh
+docker run -it consul:latest consul keygen
+```
 
 ## Deploy all resources
 1. Clone repository:
@@ -39,7 +59,7 @@ ansible-playbook -i inventory playbooks/consul-cluster.yml
 Since we bound the Consul agent to the main private IP of the VPC instances we first need to set the environmental variable for CONSUL_HTTP_ADDR. Take one of the consul instance IPs and run the following command:
 
 ```shell
-ansible -m shell -b -a "CONSUL_HTTP_ADDR=\"http://CONSUL_INSTANCE_IP:8500\" consul members" CONSUL_INSTANCE_NAME -i inventory
+ansible -m shell -b -a "consul members" CONSUL_INSTANCE_NAME -i inventory
 ```
 
 ### Example output
