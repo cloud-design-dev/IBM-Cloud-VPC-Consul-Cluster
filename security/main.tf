@@ -16,7 +16,7 @@ resource "ibm_is_security_group_rule" "ping" {
 resource "ibm_is_security_group_rule" "bastion_ssh_in" {
   group     = ibm_is_security_group.consul_security_group.id
   direction = "inbound"
-  remote    = var.bastion_cidr
+  remote    = var.bastion_security_group
   tcp {
     port_min = 22
     port_max = 22
@@ -26,7 +26,7 @@ resource "ibm_is_security_group_rule" "bastion_ssh_in" {
 resource "ibm_is_security_group_rule" "consul_http" {
   group     = ibm_is_security_group.consul_security_group.id
   direction = "inbound"
-  remote    = var.consul_cidr
+  remote    = "0.0.0.0/0"
   tcp {
     port_min = 8500
     port_max = 8500
@@ -36,7 +36,7 @@ resource "ibm_is_security_group_rule" "consul_http" {
 resource "ibm_is_security_group_rule" "consul_tcp_in" {
   group     = ibm_is_security_group.consul_security_group.id
   direction = "inbound"
-  remote    = var.consul_cidr
+  remote    = "0.0.0.0/0"
   tcp {
     port_min = 8300
     port_max = 8302
@@ -46,7 +46,7 @@ resource "ibm_is_security_group_rule" "consul_tcp_in" {
 resource "ibm_is_security_group_rule" "consul_udp_in" {
   group     = ibm_is_security_group.consul_security_group.id
   direction = "inbound"
-  remote    = var.consul_cidr
+  remote    = "0.0.0.0/0"
   udp {
     port_min = 8301
     port_max = 8302
@@ -56,7 +56,7 @@ resource "ibm_is_security_group_rule" "consul_udp_in" {
 resource "ibm_is_security_group_rule" "consul_udp_dns_in" {
   group     = ibm_is_security_group.consul_security_group.id
   direction = "inbound"
-  remote    = var.consul_cidr
+  remote    = "0.0.0.0/0"
   udp {
     port_min = 8600
     port_max = 8600
@@ -66,7 +66,7 @@ resource "ibm_is_security_group_rule" "consul_udp_dns_in" {
 resource "ibm_is_security_group_rule" "consul_tcp_dns_in" {
   group     = ibm_is_security_group.consul_security_group.id
   direction = "inbound"
-  remote    = var.consul_cidr
+  remote    = "0.0.0.0/0"
   tcp {
     port_min = 8600
     port_max = 8600

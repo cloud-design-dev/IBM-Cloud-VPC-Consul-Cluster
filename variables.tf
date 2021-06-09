@@ -10,11 +10,28 @@ variable "region" {
   default     = ""
 }
 
-variable "resource_group" {
-  default = ""
+variable "existing_resource_group" {
+  type        = string
+  description = "(Optional) The name of an existing Resource Group to use for deployed resources. If none provided, one will be created for you."
+  default     = ""
 }
 
-variable "name" {}
+variable "existing_vpc_name" {
+  type        = string
+  description = "(Optional) The name of an existing VPC to use for deployed resources. If none provided, one will be created for you. If you use an existing VPC you must also specify an existing Subnet."
+  default     = ""
+}
+
+variable "existing_subnet_name" {
+  type        = string
+  description = "(Optional) The name of an existing Subnet to use for deployed resources. If none provided, one will be created for you. If you use an existing Subnet you must also specify an existing VPC."
+  default     = ""
+}
+
+variable "name" {
+  type        = string
+  description = "Identifier that will be prepended to all resource names."
+}
 
 variable "tags" {
   default = ["owner:ryantiffany"]
@@ -43,7 +60,9 @@ variable "image" {
 }
 
 variable "ssh_key" {
-  default = ""
+  type        = string
+  description = "The name of an existing SSH key in the VPC region that will be added to all compute instances."
+  default     = ""
 }
 
 variable "encrypt_key" {}
