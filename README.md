@@ -28,8 +28,8 @@ docker run -it consul:latest consul keygen
 ## Deploy all resources
 1. Clone repository:
     ```sh
-    git clone https://github.com/cloud-design-dev/ibm-vpc-consul-terraform-ansible.git
-    cd ibm-vpc-consul-terraform-ansible
+    git clone https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster.git
+    cd IBM-Cloud-VPC-Consul-Cluster
     ```
 1. Copy `terraform.tfvars.template` to `terraform.tfvars`:
    ```sh
