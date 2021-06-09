@@ -8,7 +8,6 @@ ansible/playbooks/deployment_vars.yml
 .terraform.lock.hcl
 ansible/inventory
 ansible/ansible.cfg
-ansible/templates/server.hcl
 
 # Crash log files
 crash.log

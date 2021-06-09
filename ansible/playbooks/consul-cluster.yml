@@ -28,7 +28,7 @@
           block: export CONSUL_HTTP_ADDR="http://{{ ansible_ens3.ipv4.address }}:8500"
       - name: Copy server config to /etc/consul.d/server.hcl
         copy:
-          src: ../templates/server.j2
+          src: ../templates/server.hcl
           dest: /etc/consul.d/server.hcl
           owner: consul
           group: consul
