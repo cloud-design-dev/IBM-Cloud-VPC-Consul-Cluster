@@ -7,7 +7,7 @@ locals {
   ssh_key_ids    = var.ssh_key != "" ? [data.ibm_is_ssh_key.deploymentKey[0].id, ibm_is_ssh_key.generated_key.id] : [ibm_is_ssh_key.generated_key.id]
   resource_group = var.existing_resource_group != "" ? data.ibm_resource_group.group.0.id : ibm_resource_group.group.0.id
   vpc            = var.existing_vpc_name != "" ? data.ibm_is_vpc.vpc.0 : module.vpc.0
-  subnet         = var.existing_subnet_name != "" ? data.ibm_is_subnet.subnet.0 : module.vpc.0.subnet_id
+  subnet_id      = var.existing_subnet_name != "" ? data.ibm_is_subnet.subnet.0.id : module.vpc.0.subnet_id
 }
 
 resource "ibm_resource_group" "group" {
@@ -52,7 +52,7 @@ module "vpc-bastion" {
   name              = "${var.name}-bastion"
   resource_group_id = local.resource_group
   vpc_id            = local.vpc.id
-  subnet_id         = local.subnet.id
+  subnet_id         = local.subnet_id
   ssh_key_ids       = local.ssh_key_ids
   allow_ssh_from    = var.allow_ssh_from
   create_public_ip  = var.create_public_ip
@@ -64,11 +64,11 @@ module "consul_cluster" {
   count             = 3
   source            = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Instance-Module.git"
   vpc_id            = local.vpc.id
-  subnet_id         = local.subnet.id
+  subnet_id         = local.subnet_id
   ssh_keys          = local.ssh_key_ids
   resource_group    = local.resource_group
   name              = "${var.name}-consul${count.index + 1}"
-  zone              = local.subnet.zone
+  zone              = data.ibm_is_zones.mzr.zones[0]
   security_group_id = module.security.consul_security_group
   tags              = concat(var.tags, ["region:${var.region}", "owner:${var.owner}", "vpc:${var.name}-vpc", "zone:${data.ibm_is_zones.mzr.zones[0]}"])
   user_data         = file("${path.module}/install.yml")
