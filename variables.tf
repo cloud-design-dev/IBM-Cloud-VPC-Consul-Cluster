@@ -1,37 +1,56 @@
-# variable pdns_instance_name {}
-variable region {}
-variable resource_group {}
-#variable project_name {}
-variable tags {
-  default = ["ryantiffany"]
+variable "ibmcloud_api_key" {
+  description = "IBM Cloud API key."
+  type        = string
+  default     = ""
 }
 
-variable address_count {
+variable "region" {
+  description = "IBM Cloud VPC region where resources will be deployed."
+  type        = string
+  default     = ""
+}
+
+variable "resource_group" {
+  default = ""
+}
+
+variable "name" {}
+
+variable "tags" {
+  default = ["owner:ryantiffany"]
+}
+
+variable "address_count" {
   default = "256"
 }
 
-#variable ibmcloud_api_key {}
+variable "allow_ssh_from" {
+  default = ""
+}
 
-variable ibmcloud_timeout {
+variable "ibmcloud_timeout" {
   default = 900
 }
 
-variable profile {
+variable "profile" {
   default = "cx2-2x4"
 }
 
-variable image {
-  default = "ibm-ubuntu-20-04-minimal-amd64-2"
+variable "image" {
+  type        = string
+  description = "Default OS Image to use for consul instance"
+  default     = "ibm-ubuntu-20-04-minimal-amd64-2"
 }
 
-#variable ssh_key {}
+variable "ssh_key" {
+  default = ""
+}
 
-variable encrypt_key {}
+variable "encrypt_key" {}
 
-# variable "pdns_instance_name" {}
 
-#variable "acl_token" {}
-
-variable remote_ip {}
-
-variable ibmcloud_api_key {}
+variable "create_public_ip" {
+  type        = bool
+  description = "Set whether to allocate a public IP address for the bastion instance. Default is `true`"
+  default     = true
+}

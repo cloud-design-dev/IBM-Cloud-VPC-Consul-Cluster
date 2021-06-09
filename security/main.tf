@@ -16,7 +16,7 @@ resource "ibm_is_security_group_rule" "ping" {
 resource "ibm_is_security_group_rule" "bastion_ssh_in" {
   group     = ibm_is_security_group.consul_security_group.id
   direction = "inbound"
-  remote    = var.vpc_security_group
+  remote    = var.bastion_cidr
   tcp {
     port_min = 22
     port_max = 22

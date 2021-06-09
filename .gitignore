@@ -5,7 +5,8 @@
 *.tfstate
 *.tfstate.*
 ansible/playbooks/deployment_vars.yml
-
+.terraform.lock.hcl
+ansible/inventory
 # Crash log files
 crash.log
 

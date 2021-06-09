@@ -1,0 +1,16 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+    - python
+    - python-apt
+    - python3-apt
+    - build-essential
+    - unzip
+    - jq
+    - git
+snap:
+    commands:
+      00: snap install yq
+final_message: "The system is finally up, after $UPTIME seconds"
+output: {all: '| tee -a /var/log/cloud-init-output.log'}
