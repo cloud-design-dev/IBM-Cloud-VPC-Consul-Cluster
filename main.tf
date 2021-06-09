@@ -6,7 +6,7 @@
 locals {
   ssh_key_ids    = var.ssh_key != "" ? [data.ibm_is_ssh_key.deploymentKey[0].id, ibm_is_ssh_key.generated_key.id] : [ibm_is_ssh_key.generated_key.id]
   resource_group = var.existing_resource_group != "" ? data.ibm_resource_group.group.0.id : ibm_resource_group.group.0.id
-  vpc            = var.existing_vpc_name != "" ? data.ibm_is_vpc.vpc.0 : module.vpc.0.vpc
+  vpc            = var.existing_vpc_name != "" ? data.ibm_is_vpc.vpc.0 : module.vpc.0
   subnet         = var.existing_subnet_name != "" ? data.ibm_is_subnet.subnet.0 : module.vpc.0.subnet_id
 }
 

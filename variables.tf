@@ -76,6 +76,6 @@ variable "create_public_ip" {
 }
 
 variable "commit" {
-  type = string
+  type    = string
   default = ""
 }
