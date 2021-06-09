@@ -74,3 +74,8 @@ variable "create_public_ip" {
   description = "Set whether to allocate a public IP address for the bastion instance. Default is `true`"
   default     = true
 }
+
+variables "commit" {
+  type = string
+  default = ""
+}

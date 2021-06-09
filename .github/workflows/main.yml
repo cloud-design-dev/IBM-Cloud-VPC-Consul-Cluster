@@ -27,6 +27,6 @@ jobs:
         name: terraform validate
         run: find . -name ".terraform" -prune -o -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && echo "$m - validate" && terraform validate && echo "√ $m") || exit 1 ; done
       -
-        name: terraform ibm check 
-        run: terraform plan -var="commit=${{ env.GITHUB_ACTION }}" -var="ibmcloud_api_key=${{ secrets.IBMCLOUD_API_KEY }}" -var="region=jp-tok" -var="resource_group=CDE" -var=ssh_key="hyperion-jp-tok" -out default.tfplan
+        name: terraform new vpc check 
+        run: terraform plan -var="commit=${{ env.GITHUB_SHA }}" -var="ibmcloud_api_key=${{ secrets.IBMCLOUD_API_KEY }}" -var="region=jp-tok" -var="existing_resource_group=CDE" -var=ssh_key="hyperion-jp-tok" -out default.tfplan
 
