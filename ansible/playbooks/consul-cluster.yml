@@ -1,6 +1,5 @@
 ---
   - hosts: instances
-    become: true
     vars_files:
       deployment_vars.yml
     tasks:
