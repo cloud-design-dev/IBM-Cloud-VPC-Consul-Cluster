@@ -34,7 +34,7 @@ module "vpc" {
   name           = "${var.name}-vpc"
   zone           = data.ibm_is_zones.mzr.zones[0]
   resource_group = local.resource_group
-  tags           = concat(var.tags, ["region:${var.region}", "owner:${var.owner}"])
+  tags           = concat(var.tags, ["region:${var.region}", "owner:${var.owner}", "vpc:${var.name}-vpc"])
 }
 
 module "security" {
@@ -61,18 +61,26 @@ module "vpc-bastion" {
 }
 
 module "consul_cluster" {
-  count             = 3
-  source            = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Instance-Module.git"
-  vpc_id            = local.vpc.id
-  subnet_id         = local.subnet_id
-  ssh_keys          = local.ssh_key_ids
-  resource_group    = local.resource_group
-  name              = "${var.name}-consul${count.index + 1}"
-  zone              = data.ibm_is_zones.mzr.zones[0]
-  security_group_id = module.security.consul_security_group
-  tags              = concat(var.tags, ["region:${var.region}", "owner:${var.owner}", "vpc:${var.name}-vpc", "zone:${data.ibm_is_zones.mzr.zones[0]}"])
-  user_data         = file("${path.module}/install.yml")
+  count           = 3
+  source          = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Instance-Module.git"
+  vpc_id          = local.vpc.id
+  subnet_id       = local.subnet_id
+  ssh_keys        = local.ssh_key_ids
+  resource_group  = local.resource_group
+  name            = "${var.name}-consul${count.index + 1}"
+  zone            = data.ibm_is_zones.mzr.zones[0]
+  security_groups = module.security.consul_security_group
+  tags            = concat(var.tags, ["region:${var.region}", "owner:${var.owner}", "vpc:${var.name}-vpc", "zone:${data.ibm_is_zones.mzr.zones[0]}"])
+  user_data       = file("${path.module}/install.yml")
 }
+
+resource "ibm_is_security_group_network_interface_attachment" "under_maintenance" {
+  depends_on        = [module.consul_cluster]
+  count             = 3
+  network_interface = module.consul_cluster[count.index].instance.primary_network_interface.0.id
+  security_group    = module.vpc-bastion.bastion_maintenance_group_id
+}
+
 
 module "ansible" {
   source          = "./ansible"

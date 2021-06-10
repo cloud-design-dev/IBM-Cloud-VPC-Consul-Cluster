@@ -2,7 +2,7 @@ module "vpc" {
   source         = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Module.git"
   name           = var.name
   resource_group = var.resource_group
-  tags           = concat(var.tags, ["vpc:${var.name}-vpc"])
+  tags           = var.tags
 }
 
 module "public_gateway" {
@@ -11,7 +11,7 @@ module "public_gateway" {
   zone           = var.zone
   vpc            = module.vpc.id
   resource_group = var.resource_group
-  tags           = concat(var.tags, ["vpc:${var.name}-vpc", "zone:${var.zone}"])
+  tags           = concat(var.tags, ["zone:${var.zone}"])
 }
 
 module "subnet" {
@@ -22,5 +22,5 @@ module "subnet" {
   vpc            = module.vpc.id
   zone           = var.zone
   public_gateway = module.public_gateway.id
-  tags           = concat(var.tags, ["vpc:${var.name}-vpc", "zone:${var.zone}"])
+  tags           = concat(var.tags, ["zone:${var.zone}"])
 }
