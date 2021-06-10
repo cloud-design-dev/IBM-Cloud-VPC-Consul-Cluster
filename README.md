@@ -8,19 +8,18 @@ The following information will be needed for each of the deployment options.
 
  - An [IBM Cloud API Key](https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)
  - A Consul [Encrypt Key](https://www.consul.io/docs/agent/options#_encrypt). This is the secret key to use for encryption of Consul network traffic. See [Generate Consul Encrypt Key](#generate-consul-encrypt-key) for running the `keygen` command.
-
+ - [Docker](https://docs.docker.com/get-docker/) installed. We will use a Consul Docker image to generate our Consul Encrypt key.
+ - 
 ### Prerequisites for Deployment Option 1: Local Terraform deployment
 In addition to the [above](#prerequisites-for-all-deployment-options), the following resources are required to deploy using a local terraform installation:
 
  - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) installed. This will deploy the required infrastructure.
  - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-specific-operating-systems) installed. This will configure our Consul instances.  
- - [Docker](https://docs.docker.com/get-docker/) installed. We will use a Consul Docker image to generate our consul gossip key.
  - [tfswitch](https://tfswitch.warrensbox.com/Install/) installed. 
 
 ### Prerequisites for Deployment Option 2: Local bxshell deployment 
 If you would like to use an IBM Cloud friendly Docker image in order to not interfere with locally installed versions of the required tools, I recommend using [bxshell](https://github.com/l2fprod/bxshell). In addition to the [above](#prerequisites-for-all-deployment-options), the following resources are required to deploy using bxshell
 
- - [Docker](https://docs.docker.com/get-docker/) installed. We will use a Consul Docker image to generate our consul gossip key.
  - [bxshell](https://github.com/l2fprod/bxshell#install) installed. 
 
 ## Generate Consul Encrypt Key
