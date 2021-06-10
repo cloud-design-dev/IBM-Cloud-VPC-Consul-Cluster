@@ -88,8 +88,8 @@ variable "create_public_ip" {
   default     = true
 }
 
-variable "commit" {
-  type        = string
-  description = "Github SHA for commit. This is used for tracking purposes and will be removed at some point."
-  default     = ""
-}
+# variable "commit" {
+#   type        = string
+#   description = "Github SHA for commit. This is used for tracking purposes and will be removed at some point."
+#   default     = ""
+# }

@@ -21,3 +21,9 @@ name = ""
 
 # Identifier for person that created the consul cluster and associated resources. 
 owner = ""
+
+# (Optional) The name of an existing Subnet to use for deployed resources. If none provided, one will be created for you. If you use an existing Subnet you must also set the `existing_vpc_name` variable.
+existing_subnet_name = ""
+
+# (Optional) The name of an existing VPC to use for deployed resources. If none provided, one will be created for you. If you use an existing VPC you must also set the `existing_subnet_name` variable.
+existing_vpc_name
