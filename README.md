@@ -1,7 +1,7 @@
 # Deploy a Consul cluster to an IBM Cloud VPC using Terraform and Ansible
-The following code will deploy a 3 node [Consul](https://www.consul.io/) cluster in a single IBM Cloud [VPC]() zone. If you do not already have an available VPC the code can create one for you.
-# Status
-[![validate-existing-vpc-deployment](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/existing-vpc.yml/badge.svg)](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/existing-vpc.yml) [![validate-new-vpc-deployment](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/new-vpc.yml/badge.svg)](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/new-vpc.yml)
+[![validate-existing-vpc-deployment](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/existing-vpc.yml/badge.svg)](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/existing-vpc.yml)  [![validate-new-vpc-deployment](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/new-vpc.yml/badge.svg)](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/new-vpc.yml)
+
+The following code will deploy a 3 node [Consul](https://www.consul.io/) cluster in a single IBM Cloud [VPC zone](https://cloud.ibm.com/docs/vpc?topic=vpc-about-networking-for-vpc#networking-terms-zones). If you do not already have an available VPC the code can create one for you.
 
 ## Prerequisites for **all** deployment options
 The following information will be needed for each of the deployment options.  
@@ -10,18 +10,19 @@ The following information will be needed for each of the deployment options.
  - A Consul [Encrypt Key](https://www.consul.io/docs/agent/options#_encrypt). This is the secret key to use for encryption of Consul network traffic. See [Generate Consul Encrypt Key](#generate-consul-encrypt-key) for running the `keygen` command.
 
 ### Prerequisites for Deployment Option 1: Local Terraform deployment
+In addition to the [above](#prerequisites-for-all-deployment-options), the following resources are required to deploy using a local terraform installation:
 
  - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) installed. This will deploy the required infrastructure.
  - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-specific-operating-systems) installed. This will configure our Consul instances.  
  - [Docker](https://docs.docker.com/get-docker/) installed. We will use a Consul Docker image to generate our consul gossip key..
 
 ### Prerequisites for Deployment Option 2: Local bxshell deployment 
-If you would like to use an IBM Cloud friendly Docker image in order to not interfere with locally installed versions of the required tools, I recommend using [bxshell](https://github.com/l2fprod/bxshell)
+If you would like to use an IBM Cloud friendly Docker image in order to not interfere with locally installed versions of the required tools, I recommend using [bxshell](https://github.com/l2fprod/bxshell). In addition to the [above](#prerequisites-for-all-deployment-options), the following resources are required to deploy using bxshell
 
  - [Docker](https://docs.docker.com/get-docker/) installed. We will use a Consul Docker image to generate our consul gossip key.
  - [bxshell](https://github.com/l2fprod/bxshell#install) installed. 
 
-### Generate Consul Encrypt Key
+## Generate Consul Encrypt Key
 If you have [Docker](https://docs.docker.com/get-docker/) installed run the following command to generate the `encrypt_key`
 
 ```sh
