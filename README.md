@@ -61,7 +61,7 @@ After the plan completes we will move on to deploying Consul using Ansible.
 ```
 
 ## Verify that the cluster is running
-Since we bound the Consul agent to the main private IP of the VPC instances we first need to set the environmental variable for CONSUL_HTTP_ADDR. Take one of the consul instance IPs and run the following command:
+Run the following command to verify the cluster is running. `CONSUL_INSTANCE_NAME` is the name of one of the consul instances in your inventory file. 
 
 ```shell
 ❯ ansible -m shell -b -a "consul members" CONSUL_INSTANCE_NAME -i inventory
