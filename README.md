@@ -17,18 +17,18 @@ The following information will be needed for each of the deployment options.
 
 ### Prerequisites for Deployment Option 1: Local Terraform deployment
 
- - [Terraform]() installed. This will deploy the required infrastructure.
- - [Ansible]() installed. This will configure our Consul instances.  
- - [Docker]() installed. We will use a Consul Docker image to generate our consul gossip key..
+ - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) installed. This will deploy the required infrastructure.
+ - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-specific-operating-systems) installed. This will configure our Consul instances.  
+ - [Docker](https://docs.docker.com/get-docker/) installed. We will use a Consul Docker image to generate our consul gossip key..
 
 ### Prerequisites for Deployment Option 2: Local bxshell deployment 
 If you would like to use an IBM Cloud friendly Docker image in order to not interfere with locally installed versions of the required tools, I recommend using [bxshell](https://github.com/l2fprod/bxshell)
 
- - [Docker]() installed. We will use a Consul Docker image to generate our consul gossip key.
+ - [Docker](https://docs.docker.com/get-docker/) installed. We will use a Consul Docker image to generate our consul gossip key.
  - [bxshell](https://github.com/l2fprod/bxshell#install) installed. 
 
 ### Generate Consul Encrypt Key
-If you have [Docker]() installed
+If you have [Docker](https://docs.docker.com/get-docker/) installed run the following command to generate the `encrypt_key`
 
 ```sh
 docker run -it consul:latest consul keygen
@@ -60,26 +60,25 @@ After the plan completes we will move on to deploying Consul using Ansible.
 
 ## Run Ansible playbook to create the consul cluster
 ```sh
-cd ansible 
-ansible-playbook -i inventory playbooks/consul-cluster.yml
+❯ cd ansible 
+❯ ansible-playbook -i inventory playbooks/consul-cluster.yml
 ```
 
 ## Verify that the cluster is running
 Since we bound the Consul agent to the main private IP of the VPC instances we first need to set the environmental variable for CONSUL_HTTP_ADDR. Take one of the consul instance IPs and run the following command:
 
 ```shell
-ansible -m shell -b -a "consul members" CONSUL_INSTANCE_NAME -i inventory
+❯ ansible -m shell -b -a "consul members" CONSUL_INSTANCE_NAME -i inventory
 ```
 
 ### Example output
 ```shell
-ansible -m shell -b -a "CONSUL_HTTP_ADDR=\"http://10.241.0.36:8500\" consul members" dev-011534-us-east-1-consul1 -i inventory
-dev-011534-us-east-1-consul1 | CHANGED | rc=0 >>
-
-Node                          Address           Status  Type    Build  Protocol  DC       Segment
-dev-011534-us-east-1-consul1  10.241.0.36:8301  alive   server  1.9.0  2         us-east  <all>
-dev-011534-us-east-1-consul2  10.241.0.38:8301  alive   server  1.9.0  2         us-east  <all>
-dev-011534-us-east-1-consul3  10.241.0.37:8301  alive   server  1.9.0  2         us-east  <all>
+❯ ansible -m shell -b -a "consul members" consulrt-consul1 -i inventory
+consulrt-consul1 | CHANGED | rc=0 >>
+Node              Address          Status  Type    Build  Protocol  DC       Segment
+consulrt-consul1  10.241.0.4:8301  alive   server  1.9.6  2         us-east  <all>
+consulrt-consul2  10.241.0.5:8301  alive   server  1.9.6  2         us-east  <all>
+consulrt-consul3  10.241.0.6:8301  alive   server  1.9.6  2         us-east  <all>
 ```
 
 ### Asciinema recording 
