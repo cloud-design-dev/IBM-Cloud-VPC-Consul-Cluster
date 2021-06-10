@@ -1,8 +1,10 @@
 # Status
 Terraform validation when using an existing VPC
+
 [![validate-existing-vpc-deployment](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/existing-vpc.yml/badge.svg)](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/existing-vpc.yml)
 
 Terraform validation when creating a new VPC
+
 [![validate-new-vpc-deployment](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/new-vpc.yml/badge.svg)](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/new-vpc.yml)
 
 # Deploy a Consul cluster to an IBM Cloud VPC using Terraform and Ansible
