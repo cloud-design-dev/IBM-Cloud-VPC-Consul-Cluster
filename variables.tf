@@ -34,24 +34,33 @@ variable "name" {
 }
 
 variable "tags" {
-  default = []
+  type        = list(string)
+  description = "Default set of tags to add to all deployed resources."
+  default     = []
 }
 
 variable "owner" {
-  default = "ryantiffany"
+  type        = string
+  description = "Identifier for project resources."
+  default     = ""
 }
 
 
 variable "allow_ssh_from" {
-  default = ""
+  type        = string
+  description = "(Optional) An IP Address, CIDR block, or VPC Security group that will be allowed to access the bastion via SSH."
+  default     = ""
 }
 
 variable "ibmcloud_timeout" {
-  default = 900
+  description = "IBM Cloud API timeout."
+  default     = 900
 }
 
 variable "profile" {
-  default = "cx2-2x4"
+  type        = string
+  description = "Default instance size for compute nodes. Run `ibmcloud in-prs` to see available options."
+  default     = "cx2-2x4"
 }
 
 variable "image" {
@@ -66,7 +75,11 @@ variable "ssh_key" {
   default     = ""
 }
 
-variable "encrypt_key" {}
+variable "encrypt_key" {
+  type        = string
+  description = "TThe Consul Encrypt Key. See README if you need to generate a key."
+  default     = ""
+}
 
 
 variable "create_public_ip" {
@@ -76,6 +89,7 @@ variable "create_public_ip" {
 }
 
 variable "commit" {
-  type    = string
-  default = ""
+  type        = string
+  description = "Github SHA for commit. This is used for tracking purposes and will be removed at some point."
+  default     = ""
 }
