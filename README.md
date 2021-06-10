@@ -1,7 +1,26 @@
-# Deploy a Consul cluster to an IBM Cloud VPC using Terraform and Ansible
+# Overview
+The following code will deploy a 3 node [Consul](https://www.consul.io/) cluster in a single IBM Cloud [VPC zone](https://cloud.ibm.com/docs/vpc?topic=vpc-about-networking-for-vpc#networking-terms-zones). If you do not already have an available VPC the code can create one for you. You will then use Ansible to install and configure Consul on the compute instances. 
+
 [![validate-existing-vpc-deployment](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/existing-vpc.yml/badge.svg)](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/existing-vpc.yml)  [![validate-new-vpc-deployment](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/new-vpc.yml/badge.svg)](https://github.com/cloud-design-dev/IBM-Cloud-VPC-Consul-Cluster/actions/workflows/new-vpc.yml)
 
-The following code will deploy a 3 node [Consul](https://www.consul.io/) cluster in a single IBM Cloud [VPC zone](https://cloud.ibm.com/docs/vpc?topic=vpc-about-networking-for-vpc#networking-terms-zones). If you do not already have an available VPC the code can create one for you.
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Prerequisites for **all** deployment options](#prerequisites-for-all-deployment-options)
+  - [Prerequisites for Deployment Option 1: Local Terraform deployment](#prerequisites-for-deployment-option-1-local-terraform-deployment)
+  - [Prerequisites for Deployment Option 2: Local bxshell deployment](#prerequisites-for-deployment-option-2-local-bxshell-deployment)
+- [Generate Consul Encrypt Key](#generate-consul-encrypt-key)
+- [Deploy all resources](#deploy-all-resources)
+  - [Inputs](#inputs)
+  - [Outputs](#outputs)
+- [Run Ansible playbook to create the consul cluster](#run-ansible-playbook-to-create-the-consul-cluster)
+- [Verify that the cluster is running](#verify-that-the-cluster-is-running)
+  - [Example output](#example-output)
+  - [Asciinema recording](#asciinema-recording)
+- [Diagram](#diagram)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ## Prerequisites for **all** deployment options
 The following information will be needed for each of the deployment options.  
