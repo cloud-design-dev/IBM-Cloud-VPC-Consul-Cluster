@@ -1,0 +1,31 @@
+name: validate-new-vpc-deployment
+
+on:
+  push:
+    branches:
+    - main
+jobs:
+  terraform_validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: prepare
+        run: |
+          echo "$HOME/.bin" >> $GITHUB_PATH
+          curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh > /tmp/tfswitch-install.sh
+          chmod +x /tmp/tfswitch-install.sh
+          /tmp/tfswitch-install.sh -b $HOME/.bin
+      -
+        name: checkout
+        uses: actions/checkout@v2
+      -
+        name: get terraform
+        run: tfswitch -b $HOME/.bin/terraform
+      -
+        name: terraform init 
+        run: find . -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && echo "$m - init" && terraform init -input=false -backend=true) || exit 1; done
+      -
+        name: terraform validate
+        run: find . -name ".terraform" -prune -o -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && echo "$m - validate" && terraform validate && echo "√ $m") || exit 1 ; done
+      -
+        name: terraform new vpc check 
+        run: terraform plan -var="commit=${{ env.GITHUB_SHA }}" -var="encrypt_key=${{ secrets.CONSUL_ENCRYPT_KEY }}" -var="ibmcloud_api_key=${{ secrets.IBMCLOUD_API_KEY }}" -var="region=us-east" -var="existing_resource_group=CDE" -var="name=newlab" -var="ssh_key=hyperion-us-east" -var="owner=ryantiffany" -out default.tfplan
