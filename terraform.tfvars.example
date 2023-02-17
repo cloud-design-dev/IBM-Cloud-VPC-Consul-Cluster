@@ -1,5 +1,5 @@
 # Region where resources will be deployed
-region = ""
+region = "us-south"
 
 # Resource group name for deployed resources
 existing_resource_group = ""
