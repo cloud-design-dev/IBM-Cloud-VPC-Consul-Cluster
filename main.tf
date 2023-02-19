@@ -46,60 +46,120 @@ module "vpc" {
   gateway_tags                = local.tags
 }
 
-# module "security" {
-#   source                 = "./security"
-#   name                   = var.name
-#   vpc_id                 = local.vpc.id
-#   bastion_security_group = module.vpc-bastion.bastion_maintenance_group_id
-#   resource_group         = local.resource_group
-# }
+module "backend_network_acl" {
+  source = "terraform-ibm-modules/vpc/ibm//modules/network-acl"
 
+  name              = "${local.prefix}-backend-acl"
+  vpc_id            = module.vpc.vpc_id[0]
+  resource_group_id = module.resource_group.resource_group_id
+  rules             = local.backend_acl_rules
+  tags              = local.tags
+}
 
-# 
-# module "vpc-bastion" {
-#   depends_on        = [local.vpc]
-#   source            = "we-work-in-the-cloud/vpc-bastion/ibm"
-#   version           = "0.0.7"
-#   name              = "${var.name}-bastion"
-#   resource_group_id = local.resource_group
-#   vpc_id            = local.vpc.id
-#   subnet_id         = local.subnet_id
-#   ssh_key_ids       = local.ssh_key_ids
-#   allow_ssh_from    = var.allow_ssh_from
-#   create_public_ip  = var.create_public_ip
-#   init_script       = file("${path.module}/install.yml")
-#   tags              = concat(var.tags, ["region:${var.region}", "owner:${var.owner}", "vpc:${var.name}-vpc", "zone:${data.ibm_is_zones.mzr.zones[0]}"])
-# }
+module "backend_security_group" {
+  source = "terraform-ibm-modules/vpc/ibm//modules/security-group"
 
-# module "consul_cluster" {
-#   count           = 3
-#   source          = "git::https://github.com/cloud-design-dev/IBM-Cloud-VPC-Instance-Module.git"
-#   vpc_id          = local.vpc.id
-#   subnet_id       = local.subnet_id
-#   ssh_keys        = local.ssh_key_ids
-#   resource_group  = local.resource_group
-#   name            = "${var.name}-consul${count.index + 1}"
-#   zone            = data.ibm_is_zones.mzr.zones[0]
-#   security_groups = module.security.consul_security_group
-#   tags            = concat(var.tags, ["region:${var.region}", "owner:${var.owner}", "vpc:${var.name}-vpc", "zone:${data.ibm_is_zones.mzr.zones[0]}"])
-#   user_data       = file("${path.module}/install.yml")
-# }
+  create_security_group = true
+  name                  = "${local.prefix}-frontend-sg"
+  vpc_id                = module.vpc.vpc_id[0]
+  resource_group_id     = module.resource_group.resource_group_id
+  security_group_rules  = local.backend_sg_rules
+}
 
-# resource "ibm_is_security_group_network_interface_attachment" "under_maintenance" {
-#   depends_on        = [module.consul_cluster]
-#   count             = 3
-#   network_interface = module.consul_cluster[count.index].instance.primary_network_interface.0.id
-#   security_group    = module.vpc-bastion.bastion_maintenance_group_id
-# }
+module "frontend_security_group" {
+  source = "terraform-ibm-modules/vpc/ibm//modules/security-group"
 
+  create_security_group = false
+  security_group        = module.vpc.vpc_default_security_group[0]
+  resource_group_id     = module.resource_group.resource_group_id
+  security_group_rules = [
+    {
+      name       = "inbound-frontend-ssh"
+      direction  = "inbound"
+      remote     = "0.0.0.0/0"
+      ip_version = "ipv4"
+      tcp = {
+        port_min = 22
+        port_max = 22
+      }
+      icmp = null
+      udp  = null
+    }
+  ]
+}
 
-# module "ansible" {
-#   source          = "./ansible"
-#   instances       = module.consul_cluster[*].instance
-#   bastion_ip      = module.vpc-bastion.bastion_public_ip
-#   region          = var.region
-#   encrypt_key     = var.encrypt_key
-#   private_key_pem = tls_private_key.ssh.private_key_pem
-# }
+resource "ibm_is_instance" "bastion" {
+  name                     = "${local.prefix}-bastion"
+  vpc                      = module.vpc.vpc_id[0]
+  image                    = data.ibm_is_image.base.id
+  profile                  = var.instance_profile
+  resource_group           = module.resource_group.resource_group_id
+  metadata_service_enabled = var.metadata_service_enabled
 
+  boot_volume {
+    name = "${local.prefix}-boot-volume"
+  }
 
+  primary_network_interface {
+    subnet            = module.vpc.subnet_ids[0]
+    allow_ip_spoofing = var.allow_ip_spoofing
+    security_groups   = [module.vpc.vpc_default_security_group[0]]
+  }
+
+  user_data = file("${path.module}/install.yml")
+  zone      = local.vpc_zones[0].zone
+  keys      = local.ssh_key_ids
+  tags      = concat(local.tags, ["zone:${local.vpc_zones[0].zone}"])
+}
+
+resource "ibm_is_floating_ip" "bastion" {
+  name           = "${local.prefix}-bastion-public-ip"
+  resource_group = module.resource_group.resource_group_id
+  target         = ibm_is_instance.bastion.primary_network_interface[0].id
+  tags           = concat(local.tags, ["zone:${local.vpc_zones[0].zone}"])
+}
+
+module "backend_subnet" {
+  source = "terraform-ibm-modules/vpc/ibm//modules/subnet"
+
+  name                       = "${local.prefix}-backend-subnet"
+  vpc_id                     = module.vpc.vpc_id[0]
+  resource_group_id          = module.resource_group.resource_group_id
+  location                   = local.vpc_zones[0].zone
+  number_of_addresses        = 64
+  subnet_access_control_list = module.backend_network_acl.network_acl_id
+  public_gateway             = module.vpc.public_gateway_ids[0]
+}
+
+resource "ibm_is_instance" "cluster" {
+  count                    = 3
+  name                     = "${local.prefix}-instance-${count.index}"
+  vpc                      = module.vpc.vpc_id[0]
+  image                    = data.ibm_is_image.base.id
+  profile                  = var.instance_profile
+  resource_group           = module.resource_group.resource_group_id
+  metadata_service_enabled = var.metadata_service_enabled
+
+  boot_volume {
+    name = "${local.prefix}-boot-${count.index}"
+  }
+
+  primary_network_interface {
+    subnet            = module.backend_subnet.subnet_id
+    allow_ip_spoofing = var.allow_ip_spoofing
+    security_groups   = [module.backend_security_group.security_group_id[0]]
+  }
+
+  user_data = file("${path.module}/install.yml")
+  zone      = local.vpc_zones[0].zone
+  keys      = local.ssh_key_ids
+  tags      = concat(local.tags, ["zone:${local.vpc_zones[0].zone}"])
+}
+
+module "ansible" {
+  source      = "./ansible"
+  instances   = ibm_is_instance.cluster[*]
+  bastion_ip  = ibm_is_floating_ip.bastion.address
+  region      = var.region
+  encrypt_key = var.encryption_key
+}

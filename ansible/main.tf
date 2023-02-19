@@ -33,8 +33,8 @@ resource "local_file" "ansible-config" {
   }
 }
 
-resource "local_file" "ssh-key" {
-  content         = var.private_key_pem
-  filename        = "${path.module}/generated_key_rsa"
-  file_permission = "0600"
-}
+# resource "local_file" "ssh-key" {
+#   content         = var.private_key_pem
+#   filename        = "${path.module}/generated_key_rsa"
+#   file_permission = "0600"
+# }

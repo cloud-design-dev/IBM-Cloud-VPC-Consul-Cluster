@@ -7,6 +7,7 @@ locals {
     "provider:ibm",
     "region:${var.region}",
     "vpc:${local.prefix}-vpc",
+    "tf_workspace:${terraform.workspace}"
   ]
 
   zones = length(data.ibm_is_zones.regional.zones)
@@ -16,15 +17,28 @@ locals {
     }
   }
 
-  #   frontend_rules = [
-  #     for r in var.frontend_rules : {
-  #       name       = r.name
-  #       direction  = r.direction
-  #       remote     = lookup(r, "remote", null)
-  #       ip_version = lookup(r, "ip_version", null)
-  #       icmp       = lookup(r, "icmp", null)
-  #       tcp        = lookup(r, "tcp", null)
-  #       udp        = lookup(r, "udp", null)
-  #     }
-  #   ]
+  backend_acl_rules = [
+    for r in var.backend_acl_rules : {
+      name        = r.name
+      action      = r.action
+      source      = r.source
+      destination = r.destination
+      direction   = r.direction
+      icmp        = lookup(r, "icmp", null)
+      tcp         = lookup(r, "tcp", null)
+      udp         = lookup(r, "udp", null)
+    }
+  ]
+
+  backend_sg_rules = [
+    for r in var.backend_sg_rules : {
+      name       = r.name
+      direction  = r.direction
+      remote     = lookup(r, "remote", null)
+      ip_version = lookup(r, "ip_version", null)
+      icmp       = lookup(r, "icmp", null)
+      tcp        = lookup(r, "tcp", null)
+      udp        = lookup(r, "udp", null)
+    }
+  ]
 }
