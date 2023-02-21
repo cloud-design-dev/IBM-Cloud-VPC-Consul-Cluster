@@ -1,8 +1,8 @@
-# variable "ibmcloud_api_key" {
-#   description = "IBM Cloud API key."
-#   type        = string
-#   default     = ""
-# }
+variable "ibmcloud_api_key" {
+  description = "IBM Cloud API key."
+  type        = string
+  default     = ""
+}
 
 variable "region" {
   description = "IBM Cloud VPC region where resources will be deployed."
@@ -101,27 +101,10 @@ variable "backend_acl_rules" {
   }]
 }
 
-# variable "allow_ssh_from" {
+# variable "existing_cos_instance" {
+#   description = "The name of an existing COS instance to use. If not specified, a new instance will be created."
 #   type        = string
-#   description = "(Optional) An IP Address, CIDR block, or VPC Security group that will be allowed to access the bastion via SSH."
 #   default     = ""
-# }
-
-# variable "ibmcloud_timeout" {
-#   description = "IBM Cloud API timeout."
-#   default     = 900
-# }
-
-# variable "profile" {
-#   type        = string
-#   description = "Default instance size for compute nodes. Run `ibmcloud in-prs` to see available options."
-#   default     = "cx2-2x4"
-# }
-
-# variable "image" {
-#   type        = string
-#   description = "Default OS Image to use for consul instance"
-#   default     = "ibm-ubuntu-20-04-minimal-amd64-2"
 # }
 
 variable "existing_ssh_key" {

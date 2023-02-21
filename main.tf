@@ -2,6 +2,7 @@ resource "random_string" "prefix" {
   count   = var.project_prefix != "" ? 0 : 1
   length  = 4
   special = false
+  numeric = false
   upper   = false
 }
 
@@ -131,19 +132,35 @@ module "backend_subnet" {
   public_gateway             = module.vpc.public_gateway_ids[0]
 }
 
+
+
+resource "packer_image" "hashistack" {
+  file = data.packer_files.base.file
+  variables = {
+    # Take out explicit API key and use the environment variable instead in packer file
+    # ibmcloud_api_key  = var.ibmcloud_api_key
+    resource_group_id = "${module.resource_group.resource_group_id}"
+    subnet_id         = "${module.vpc.subnet_ids[0]}"
+    region            = var.region
+    template_name     = "${local.prefix}-base-image"
+    base_image_id     = "${data.ibm_is_image.base.id}"
+  }
+
+  triggers = {
+    packer_version = data.packer_version.version.version
+    files_hash     = data.packer_files.base.files_hash
+  }
+}
+
 resource "ibm_is_instance" "cluster" {
+  depends_on               = [packer_image.hashistack]
   count                    = 3
   name                     = "${local.prefix}-instance-${count.index}"
   vpc                      = module.vpc.vpc_id[0]
-  image                    = data.ibm_is_image.base.id
+  image                    = jsondecode(data.local_file.packer_manifest.content)["builds"][0]["artifact_id"]
   profile                  = var.instance_profile
   resource_group           = module.resource_group.resource_group_id
   metadata_service_enabled = var.metadata_service_enabled
-
-  boot_volume {
-    name = "${local.prefix}-boot-${count.index}"
-  }
-
   primary_network_interface {
     subnet            = module.backend_subnet.subnet_id
     allow_ip_spoofing = var.allow_ip_spoofing
@@ -157,6 +174,9 @@ resource "ibm_is_instance" "cluster" {
 }
 
 module "ansible" {
+  depends_on = [
+    ibm_is_instance.cluster
+  ]
   source      = "./ansible"
   instances   = ibm_is_instance.cluster[*]
   bastion_ip  = ibm_is_floating_ip.bastion.address
