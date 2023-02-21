@@ -1,3 +1,5 @@
+
+
 resource "random_string" "prefix" {
   count   = var.project_prefix != "" ? 0 : 1
   length  = 4
