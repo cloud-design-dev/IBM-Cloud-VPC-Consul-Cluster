@@ -101,11 +101,11 @@ variable "backend_acl_rules" {
   }]
 }
 
-# variable "existing_cos_instance" {
-#   description = "The name of an existing COS instance to use. If not specified, a new instance will be created."
-#   type        = string
-#   default     = ""
-# }
+variable "existing_cos_instance" {
+  description = "The name of an existing COS instance to use. If not specified, a new instance will be created."
+  type        = string
+  default     = ""
+}
 
 variable "existing_ssh_key" {
   type        = string

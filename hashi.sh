@@ -25,7 +25,7 @@ done
     apt-get -qy clean
     apt-get -qy update
     apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
-    apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install linux-headers-$(uname -r) curl wget apt-transport-https ca-certificates software-properties-common netplan
+    apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install linux-headers-$(uname -r) curl wget apt-transport-https ca-certificates software-properties-common
 
 ## Add Hashicorp GPG key and repo 
     wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -61,7 +61,6 @@ EOF
 netplan apply
 
 dhclient -v -r; dhclient -v
-systemd-resolve --flush-caches
 
 echo "Installation complete!"
 
