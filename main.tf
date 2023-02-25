@@ -139,8 +139,6 @@ module "backend_subnet" {
 resource "packer_image" "hashistack" {
   file = data.packer_files.base.file
   variables = {
-    # Take out explicit API key and use the environment variable instead in packer file
-    # ibmcloud_api_key  = var.ibmcloud_api_key
     resource_group_id = "${module.resource_group.resource_group_id}"
     subnet_id         = "${module.vpc.subnet_ids[0]}"
     region            = var.region
@@ -164,6 +162,14 @@ resource "ibm_is_instance" "cluster" {
   resource_group           = module.resource_group.resource_group_id
   metadata_service_enabled = var.metadata_service_enabled
   primary_network_interface {
+    name              = "eth0"
+    subnet            = module.backend_subnet.subnet_id
+    allow_ip_spoofing = var.allow_ip_spoofing
+    security_groups   = [module.backend_security_group.security_group_id[0]]
+  }
+
+  network_interfaces {
+    name              = "eth1"
     subnet            = module.backend_subnet.subnet_id
     allow_ip_spoofing = var.allow_ip_spoofing
     security_groups   = [module.backend_security_group.security_group_id[0]]

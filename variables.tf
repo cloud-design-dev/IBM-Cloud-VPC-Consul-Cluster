@@ -68,15 +68,15 @@ variable "backend_acl_rules" {
       name        = "allow-ingress-vse"
       action      = "allow"
       direction   = "inbound"
-      source      = "10.0.0.0/8"
-      destination = "161.26.0.0/16"
+      source      = "161.26.0.0/16"
+      destination = "10.0.0.0/8"
     },
     {
       name        = "allow-ingress-iaas"
       action      = "allow"
       direction   = "inbound"
-      source      = "10.0.0.0/8"
-      destination = "161.26.0.0/16"
+      source      = "166.8.0.0/14"
+      destination = "10.0.0.0/8"
     },
     {
       name        = "allow-egress-internal"
