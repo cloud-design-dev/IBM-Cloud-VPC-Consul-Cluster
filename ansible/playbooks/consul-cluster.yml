@@ -3,25 +3,6 @@
     vars_files:
       deployment_vars.yml
     tasks:
-      - name: Update apt packages
-        apt: upgrade=yes update_cache=yes
-        when: ansible_facts['os_family'] == "Debian"
-      - name: Ensure unzip is installed
-        apt:
-          name: unzip
-          state: present
-      - name: Add apt-key
-        apt_key:
-          url: https://apt.releases.hashicorp.com/gpg
-          state: present
-      - name: Add consul repo 
-        apt_repository:
-          repo: deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main
-      - name: Install consul 
-        apt:
-          name: consul
-          state: present
-          update_cache: yes
       - name: Set consul client environment variable 
         blockinfile:
           path: /root/.bashrc

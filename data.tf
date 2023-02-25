@@ -24,7 +24,7 @@ data "local_file" "packer_manifest" {
   filename = "manifest.json"
 }
 
-# data "ibm_resource_instance" "cos" {
-#   count = var.existing_cos_instance != "" ? 1 : 0
-#   name  = var.existing_cos_instance
-# }
+data "ibm_resource_instance" "cos" {
+  count = var.existing_cos_instance != "" ? 1 : 0
+  name  = var.existing_cos_instance
+}
