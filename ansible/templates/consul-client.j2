@@ -2,5 +2,5 @@ datacenter = "{{ datacenter }}"
 data_dir = "/opt/consul"
 encrypt = "{{ encrypt_key }}"
 bind_addr = "{{ ansible_ens3.ipv4.address }}"
-advertise_addr = "{{ ansible_ens4.ipv4.address }}"
-retry_join = [{% for host in consul_servers %} "{{ hostvars[host].ansible_ens4.ipv4.address }}" {{ "," if not loop.last }} {% endfor %}]
+advertise_addr = "{{ ansible_ens3.ipv4.address }}"
+retry_join = [{% for host in consul_servers %} "{{ hostvars[host].ansible_ens3.ipv4.address }}" {{ "," if not loop.last }} {% endfor %}]
